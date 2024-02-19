@@ -1,12 +1,12 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header height="100px">
       <BaseHeader/>
     </el-header>
-    <el-main>
+    <el-main >
       <RouterView></RouterView>
     </el-main>
-    <el-footer>
+    <el-footer >
       <BaseFooter/>
     </el-footer>
   </el-container>

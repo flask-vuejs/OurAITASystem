@@ -2,7 +2,7 @@
   <div class="main-page">
     <NoticeBar class="notice-bar" :text="noticeInfo"/>
     <!-- <br> -->
-    <el-row :gutter="50">
+    <el-row :gutter="20">
       <el-col :span="16">
         <el-card class="message-card">
           <template #header>
