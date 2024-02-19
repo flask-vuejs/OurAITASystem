@@ -1,6 +1,6 @@
 <template>
   <div class="model">
-    {{ route.query }}
+    {{ route.query.type }}
   </div>
 </template>
 

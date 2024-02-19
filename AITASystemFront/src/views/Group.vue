@@ -331,6 +331,7 @@
 <style scoped>
 .group-card{
     width:200px;
+    margin: 0 auto;
     .bottom {
         margin-top: 13px;
         line-height: 12px;
