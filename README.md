@@ -1,5 +1,5 @@
 # AITASystem
 
-AITASystemFront -- 前端网页
+AITASystemFrontend -- 前端网页
 
-backend -- 后端服务
+AITASystemBackend -- 后端服务
