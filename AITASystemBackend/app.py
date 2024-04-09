@@ -6,10 +6,15 @@ import uuid
 from faker import Faker
 from flask_sqlalchemy import SQLAlchemy
 
+from footer import footer 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aitadata.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
 db = SQLAlchemy(app)
+
+app.register_blueprint(footer,url_prefix='/footer')
+
 
 
 # Flask 路由起始
@@ -17,22 +22,26 @@ db = SQLAlchemy(app)
 @app.route('/')
 def hello_world():  # put application's code here
     return 'AITA系统后台服务'
-
+   
 
 @app.route('/home/')
 def home():
     faker_provider = Faker(locale='zh_CN')
+    # 创建了一个 Faker 对象，它是 faker 库的一个实例，用于生成随机但逼真的假数据
     news_list = []
     for i in range(10):
         news = {
             "id": str(uuid.uuid4()),
             "name": faker_provider.name(),
-            "date": faker_provider.date(),
+            "date": faker_provider.date(), 
             "link": faker_provider.url()
         }
         news_list.append(news)
 
     return jsonify({"status": "0", "message": "success", "data": news_list})
+#     "status"：设置为字符串 "0"，通常表示请求成功。
+#     "message"：设置为字符串 "success"，进一步明确请求处理成功。
+#     "data"：设置为之前生成的 news_list，包含 10 条模拟新闻数据的列表。
 
 
 @app.route('/create_datasets/')

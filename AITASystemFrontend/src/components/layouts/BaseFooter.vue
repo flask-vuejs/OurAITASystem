@@ -11,7 +11,6 @@
         <h4>其他链接</h4>
       </div>
     </div>
-    
   </div>
   
 </template>
@@ -20,32 +19,11 @@
   import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
 
   let linkList = ref([
-    {
-    id: "qwerqwerqwer01",
-    url: "xxx",
-    title: "测试链接 01"
-    },
-    {
-    id: "qwerqwerqwer02",
-    url: "xxx",
-    title: "测试链接 02"
-    },
-    {
-    id: "qwerqwerqwer03",
-    url: "xxx",
-    title: "测试链接 03"
-    },
-    {
-    id: "qwerqwerqwer04",
-    url: "xxx",
-    title: "测试链接 04"
-    },
-    {
-    id: "qwerqwerqwer05",
-    url: "xxx",
-    title: "测试链接 05"
-    }
-  ])
+        {id:1, title: "关于我们", url: "/about" },
+        {id:2, title: "服务条款", url: "/terms" },
+        {id:3, title: "隐私政策", url: "/privacy" },
+        // 更多链接...
+      ])
 
 
 </script>

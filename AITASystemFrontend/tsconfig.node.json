@@ -11,9 +11,13 @@
     "composite": true,
     "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-
+    
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "types": ["node"]
+    "types": ["node"],
+    "lib": [
+      "es2017", // 或 "es201½", "esnext" 等更高版本
+      // 其他必要的库，如 "dom" 如果您的项目面向浏览器环境
+    ],
   }
 }

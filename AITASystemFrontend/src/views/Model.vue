@@ -4,13 +4,14 @@
   </div>
 </template>
 
+
 <script setup lang="ts" name="">
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /**
 * 路由对象
 */
-const route = useRoute();
+const route = useRoute();  
 /**
 * 路由实例
 */
