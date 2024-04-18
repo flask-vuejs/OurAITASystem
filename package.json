@@ -3,6 +3,7 @@
     "ant-design-vue": "3.2.14",
     "element-plus": "^2.6.3",
     "pinia": "2.0.27",
+    "v-endless-list": "^3.0.0",
     "vant": "4.0.0",
     "vite": "^5.2.8",
     "vue": "^3",
@@ -13,6 +14,3 @@
     "@vue/tsconfig": "^0.5.1"
   }
 }
-
-
-

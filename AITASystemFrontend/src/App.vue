@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
   import { RouterLink, RouterView } from 'vue-router'
-
+  import BaseFooter from './components/layouts/BaseFooter.vue';
 
 </script>
 

@@ -29,6 +29,17 @@ export default defineConfig({
       dts: 'src/components.d.ts',
     }),
   ],
+
+  // server: {
+ 
+  //   proxy: {
+  //     // https://cn.vitejs.dev/config/#server-proxy
+  //     ['/datasets']: {
+  //       target: 'http://127.0.0.1:5000',
+  //       changeOrigin: true,
+  //     }
+  //   }
+  // },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
