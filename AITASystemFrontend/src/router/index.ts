@@ -9,7 +9,7 @@ import Zxxm from '@/views/Zxxm.vue'
 import Papers from '@/views/Papers.vue'
 import News from '@/views/News.vue'
 import Contact from '@/views/Contact.vue'
-
+// import Login from '@/views/Login.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'home',
       component: Home,
     },
+    // {
+    //   path:"/login",
+    //   name: 'login',
+    //   component:Login,
+    // },
     {
       path: "/group",
       name: "group",

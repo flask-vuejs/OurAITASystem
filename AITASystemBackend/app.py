@@ -5,16 +5,31 @@ import json
 import uuid
 from faker import Faker
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
-from footer import footer 
+
+
+# from footer import footer 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aitadata.sqlite3'
+CORS(app, resources={r'/*': {'origins': '*'}}, supports_credentials=True)
+
+app.config.from_object(__name__)
+# 数据库连接部分的解释： '数据库类型+驱动程序名：//数据库用户名:密码@主机地址:端口号/连接的数据库名'
+# 根据自己本地的mysql 数据库连接信息进行修改
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123@localhost:3306/mydb1'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
+
 db = SQLAlchemy(app)
 
-app.register_blueprint(footer,url_prefix='/footer')
 
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aitadata.sqlite3'
+
+
+
+# app.register_blueprint(footer,url_prefix='/footer')
+# print(db)
 
 
 # Flask 路由起始
@@ -32,7 +47,7 @@ def home():
     for i in range(10):
         news = {
             "id": str(uuid.uuid4()),
-            "name": faker_provider.name(),
+            "name": faker_provider.name(),  
             "date": faker_provider.date(), 
             "link": faker_provider.url()
         }
@@ -76,8 +91,43 @@ def add_fake_data_group():  # 示例：添加虚拟数据到 Group 表中
 @app.route('/datasets/query/group/')
 def query_group():  # 示例：从 Group 表中查询数据
     query = Group.query.filter_by(group_person_name="老丁").first()
-    return f"name={query.group_person_name}"
+    # return f"name={query.group_person_name}"
+    data = {
+               "group_id":query.group_id,
+               "group_type":query.group_type,
+               "group_role":query.group_role,
+               "group_person_name":query.group_person_name,
+               "group_person_description":query.group_person_description,
+               "group_person_image_url":query.group_person_image_url,
+               "group_person_content":query.group_person_content,
+               "group_person_papers":query.group_person_papers,
+        }
+    return jsonify(data)
 
+# 从news表中查询数据
+@app.route('/all_news')
+def get_all_news():
+    # return 'hello world'
+    datas = News.query.all()
+    news_list=[]
+    for data in datas:
+        news_dict = {
+            "news_id":data.news_id,
+            "news_title":data.news_title,
+            "news_content":data.news_content,
+            "news_date":data.news_date,
+            "news_author":data.news_author,
+            "news_link":data.news_link,
+            "news_read_count":data.news_read_count,
+            "news_image_url":data.news_image_url,
+            "label_id":data.label_id,
+        }
+        news_list.append(news_dict)
+    if news_list:
+        return jsonify(news_list)
+    else:
+        response = {"message": "No news records found in the database."}
+        return jsonify(response), 404
 # Flask 路由结束
 
 # SQLAlchemy 对象开始
@@ -87,7 +137,7 @@ def query_group():  # 示例：从 Group 表中查询数据
 class News(db.Model):
     __tablename__ = 'news'
     news_id = db.Column(db.Integer, primary_key=True)    # 新闻 ID
-    news_title = db.Column(db.String(100))   # 新闻标题
+    news_title = db.Column(db.String(100), nullable=False)   # 新闻标题
     news_content = db.Column(db.Text)    # 新闻内容
     news_author = db.Column(db.String(20))   # 新闻作者（从用户表中选择）
     news_date = db.Column(db.DateTime)   # 发布日期
@@ -179,6 +229,6 @@ class Group(db.Model):
 # SQLAlchemy 对象结束
 
 if __name__ == '__main__':
-    app.debug = True
-    app.run()
+    #app.debug = True
+    app.run(debug=True)
 

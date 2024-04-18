@@ -49,12 +49,43 @@
         </el-col>
     </el-row>
   </div>
+  <div>
+  <h2>{{ groupData?.group_person_name }}</h2>
+  <p>Group ID: {{ groupData?.group_id }}</p>
+</div>
 </template>
 
 <script setup lang="ts" name="">
     import { ElFormItem } from 'element-plus';
     import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
+    import VueAxios from 'vue-axios';
+    
+    import axios from 'axios'; 
+interface GroupData {
+  group_id: number;
+  group_type: string;
+  group_role: string;
+  group_person_name: string;
+  group_person_description: string;
+  group_person_image_url: string;
+  group_person_content: string;
+  group_person_papers: string;
+  };
+let groupData = ref<GroupData | null>(null);
+
+async function fetchGroupData() {
+  try {
+    const response = await axios.get<GroupData>('http://127.0.0.1:5000/datasets/query/group');
+    groupData.value = response.data;
+    console.log(groupData);
+    console.log('Type of groupData:', typeof groupData);
+  } catch (error) {
+    console.error('Failed to fetch group data:', error);
+  }
+}
+onMounted(fetchGroupData);
+
     /**
     * 路由对象
     */
