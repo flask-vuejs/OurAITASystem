@@ -13,6 +13,8 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@vue/shared": "^3.4.19",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "element-plus": "^2.5.5",
     "md-editor-v3": "^4.13.0",
     "pinia": "^2.1.7",

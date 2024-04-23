@@ -10,6 +10,7 @@
     <p v-else class="no-news-message">暂无新闻数据</p>
 </template>
 
+
 <script setup lang="ts" name="">
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -70,4 +71,57 @@ defineExpose({
 
 </script>
 <style scoped lang='less'>
+.news {
+  max-width: 800px; /* 增加容器最大宽度 */
+  margin: 0 auto;
+}
+
+.news-container {
+  display: flex; /* 使用弹性布局 */
+  justify-content: space-between; /* 水平间距平均分布 */
+}
+
+.news-sidebar {
+  flex: 1; /* 平分侧边栏宽度 */
+  padding: 0 10px; /* 添加内边距 */
+  border: 2px solid #fdfafa; /* 加深边框颜色 */
+  border-radius: 5px; /* 添加边框圆角 */
+}
+
+.sidebar-item {
+  margin-bottom: 10px; /* 侧边栏项之间的间距 */
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-icon {
+  font-size: 20px; /* 图标大小 */
+  margin-right: 5px; /* 图标与文字之间的间距 */
+}
+
+.sidebar-text {
+  font-size: 16px; /* 文字大小 */
+}
+
+.news-list {
+  flex: 2; /* 设置新闻列表宽度 */
+}
+
+.news-item {
+  margin-bottom: 20px; /* 增加新闻项之间的间距 */
+  border-bottom: 1px solid #958787; /* 添加新闻项之间的分割线 */
+  padding-bottom: 10px; /* 添加底部内边距 */
+}
+
+.news-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.news-title:hover {
+  text-decoration: underline;
+}
 </style>
