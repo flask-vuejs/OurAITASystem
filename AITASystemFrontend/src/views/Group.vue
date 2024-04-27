@@ -74,6 +74,7 @@ interface GroupData {
   };
 let groupData = ref<GroupData | null>(null);
 
+
 async function fetchGroupData() {
   try {
     const response = await axios.get<GroupData>('http://127.0.0.1:5000/datasets/query/group');
