@@ -124,4 +124,32 @@ defineExpose({
 .news-title:hover {
   text-decoration: underline;
 }
+.news-image {
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.news-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #999;
+}
+
+.news-excerpt {
+  margin-top: ½em;
+  line-height: 1.5;
+  color: #666;
+}
+
+.news-label {
+  color: #666;
+  text-decoration: none;
+  &:hover {
+    color: #333;
+  }
+}
 </style>

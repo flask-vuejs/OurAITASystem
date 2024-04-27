@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "ant-design-vue": "3.2.14",
+    "bootstrap": "^5.3.0-alpha1",
     "element-plus": "^2.6.3",
     "pinia": "2.0.27",
     "v-endless-list": "^3.0.0",

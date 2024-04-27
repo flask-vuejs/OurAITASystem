@@ -7,6 +7,7 @@ from form import PublicPapersForm
 
 papers=Blueprint('papers',__name__,url_prefix="/")   #创建蓝图
 
+
 # 测试内容
 @papers.route('/test')
 def _test():
@@ -32,7 +33,7 @@ def _test():
 #         else:
 #             return restful.params_error(message='不符合wtf验证')
 
-
+# 发布论文
 @papers.route('/Papers/public', methods=['GET', 'POST'])
 def public_papers():
     # print(request.form.to_dict())
@@ -62,4 +63,64 @@ def public_papers():
         else:
             return restful.params_error(message='必填字段未填写完整')
 
-#     # 如果需要，此处添加处理 GET 请求的逻辑    
+#论文列表
+@papers.route("/Papers/list")
+def get_papers_list():
+    papers=PapersModel.query.order_by(PapersModel.create_time.desc()).all()
+    papers_list=[]
+    for paper in papers:
+        papers_dict={
+            "papers_id":paper.id,
+            "title":paper.title,
+            "content":paper.content,
+            "author":paper.author,
+            "create_time":paper.create_time,
+        }
+        papers_list.append(papers_dict)
+    if papers_list:
+        return jsonify(papers_list)
+    else:
+        response = {"message": "No papers records found in the database."}
+        return jsonify(response), 404
+
+
+# 论文详情
+@papers.route("/Papers/detail/<int:papers_id>")
+def get_papers_detail(papers_id):
+    try:
+        paper=PapersModel.query.get(papers_id)
+        if paper:
+            # comment_count=CommentModel.query.filter_by(papers_id=papers_id).count()
+            return jsonify({
+                "title":paper.title,
+                "content":paper.content,
+                "author":paper.author,
+                "create_time":paper.create_time
+            })
+    except:
+        return "404"
+
+
+# 论文发布评论
+@papers.route("/comment")
+def public_comment():
+    data=request.get_json(silent=True)
+    if form:
+        content=data['content']
+        papers_id=data['papers_id']
+        try:
+            paper=PapersModel.query.get(papers_id)
+        except Exception as e:
+            return restful.params_error(message='论文不存在')
+        create_time=datetime.now()
+        comment=CommentModel(
+            content=content,
+            create_time=create_time,
+            papers_id=papers_id
+        )
+        db.session.add(comment)
+        db.session.commit()
+        return restful.ok()
+    else:
+        return restful.params_error(message='参数错误')
+
