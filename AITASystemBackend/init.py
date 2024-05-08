@@ -7,7 +7,7 @@ from exts import db
 from Papers import papers  
 from Group import group
 from cmsbackend import views
-
+from datasets import datasets
 def create_app():
     app = Flask(__name__)
     CORS(app, resources={r'/*': {'origins': '*'}}, supports_credentials=True)
@@ -25,4 +25,5 @@ def create_app():
     app.register_blueprint(papers)
     app.register_blueprint(views.cmsapi)
     app.register_blueprint(group)
+    app.register_blueprint(datasets)
     return app

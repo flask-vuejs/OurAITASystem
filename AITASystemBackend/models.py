@@ -1,6 +1,41 @@
 from datetime import datetime
 from exts import db
 
+# 数据条目
+class Data(db.Model):
+    __tablename__ = 'data'
+    data_id = db.Column(db.Integer, primary_key=True)    # 数据 ID
+    data_title = db.Column(db.String(100), nullable=False)   # 数据标题
+    data_content = db.Column(db.Text)    # 数据内容
+    data_author = db.Column(db.String(20))   # 数据作者（从用户表中选择）
+    data_date = db.Column(db.DateTime)   # 发布日期
+    data_link = db.Column(db.String(100))    # 数据链接（可以是/data?id=xxx）
+    data_read_count = db.Column(db.Integer)  # 阅读数量
+    data_image_url = db.Column(db.Text)  # 数据图片地址
+    data_type=db.Column(db.String(20))
+    def __init__(self, title, content, author, date, link, read_count, image_url,type):
+        self.data_title = title
+        self.data_content = content
+        self.data_author = author
+        self.data_date = date
+        self.data_link = link
+        self.data_read_count = read_count
+        self.data_image_url = image_url
+        self.data_type = type
+
+
+
+# 数据标签
+class DataLabel(db.Model):
+    __tablename__ = 'data_label'
+    label_id = db.Column(db.Integer, primary_key=True)    # 标签 ID
+    label_name = db.Column(db.String(20))   # 标签名称
+    label_description = db.Column(db.Text)  # 标签描述
+
+    def __init__(self, name, description):
+        self.label_name = name
+        self.label_description = description
+
 
 # 论文模型
 class PapersModel(db.Model):

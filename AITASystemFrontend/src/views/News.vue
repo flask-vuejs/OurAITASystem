@@ -1,155 +1,161 @@
 <template>
-  <div class="news">{{ "新闻动态" }}</div>
-  <ul v-if="newsList.length > 0">
-     <li v-for="news in newsList" :key="news.news_id">
-         <h3>{{ news.news_title }}</h3>
-         <p>{{ news.news_content }}</p>
-         <!-- 添加更多需要展示的新闻属性... -->
-      </li>
-    </ul>
-    <p v-else class="no-news-message">暂无新闻数据</p>
+  <div class="news-container">
+    <h2 class="news-header">{{ "新闻动态" }}</h2>
+    <div v-if="newsList.length > 0" class="news-grid">
+      <div v-for="(news, index) in newsList" :key="news.news_id" class="news-card" @click="toggleNews(index)">
+        <!-- 检查图片数组并展示第一张图片 -->
+        <div class="news-thumbnail" v-if="news.news_image_url && news.news_image_url.length > 0" :style="{ backgroundImage: 'url(' + news.news_image_url[0] + ')' }"></div>
+        <!-- 可以添加一个else条件显示默认图片或不显示图片 -->
+        <div v-if="!news.news_image_url || news.news_image_url.length === 0" class="news-thumbnail default-thumbnail"></div>
+        <div class="news-content">
+          <h3 class="news-title">{{ news.news_title }}</h3>
+          <transition name="content">
+            <p class="news-body" v-if="activeIndex === index">{{ news.news_content }}</p>
+          </transition>
+          <div class="news-meta">
+            <span class="news-author">作者: {{ news.news_author }}</span>
+            <span class="news-date">日期: {{ news.news_date }}</span>
+            <a :href="news.news_link" target="_blank" class="news-link">阅读全文</a>
+            <span class="news-read-count">{{ news.news_read_count }}次阅读</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p v-else class="no-news">暂无新闻数据</p>
+  </div>
 </template>
 
-
-<script setup lang="ts" name="">
-import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
+
 interface News {
-       news_id: number;
-       news_title: string;
-       news_content: string;
-       news_date: string;
-       news_author: string;
-       news_link: string;
-       news_read_count: number;
-       news_image_url: string;
-       label_id: number;
-     }
-     let newsList = ref<News[]>([]);
-onMounted(() => {
-       // 发起 Axios 请求获取新闻数据
-       axios.get('http://127.0.0.1:5000/all_news')
-         .then((response) => {
-           if (response.data) {
-             newsList.value = response.data;  // 将获取到的新闻数据赋值给 newsList
-           } else {
-             console.error('Failed to fetch news data.');
-           }
-         })
-         .catch((error) => {
-           console.error('An error occurred while fetching news:', error);
-         });
-     });
+  news_id: number;
+  news_title: string;
+  news_content: string;
+  news_date: string;
+  news_author: string;
+  news_link: string;
+  news_read_count: number;
+  news_image_url: string;
+  label_id: number;
+}
 
-/**
-* 路由对象
-*/
-const route = useRoute();
-/**
-* 路由实例
-*/
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
-* 数据部分
-*/
-const data = reactive({})
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-})
-onMounted(() => {
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-})
-watchEffect(()=>{
-})
-// 使用toRefs解构
-// let { } = { ...toRefs(data) } 
-defineExpose({
-  ...toRefs(data)
-})
+const newsList = ref<News[]>([]);
+const activeIndex = ref<number | null>(null); // 用于跟踪当前展开的新闻索引
 
+onMounted(() => {
+  axios.get('http://127.0.0.1:5000/all_news')
+    .then((response) => {
+      if (response.data) {
+        newsList.value = response.data;
+      } else {
+        console.error('Failed to fetch news data.');
+      }
+    })
+    .catch((error) => {
+      console.error('An error occurred while fetching news:', error);
+    });
+});
+
+const toggleNews = (index: number) => {
+  activeIndex.value = activeIndex.value === index ? null : index;
+};
 </script>
-<style scoped lang='less'>
-.news {
-  max-width: 800px; /* 增加容器最大宽度 */
-  margin: 0 auto;
-}
 
+<style scoped>
 .news-container {
-  display: flex; /* 使用弹性布局 */
-  justify-content: space-between; /* 水平间距平均分布 */
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
 }
 
-.news-sidebar {
-  flex: 1; /* 平分侧边栏宽度 */
-  padding: 0 10px; /* 添加内边距 */
-  border: 2px solid #fdfafa; /* 加深边框颜色 */
-  border-radius: 5px; /* 添加边框圆角 */
+.news-header {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2em;
 }
 
-.sidebar-item {
-  margin-bottom: 10px; /* 侧边栏项之间的间距 */
-  display: flex;
-  align-items: center;
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-gap: 20px;
 }
 
-.sidebar-icon {
-  font-size: 20px; /* 图标大小 */
-  margin-right: 5px; /* 图标与文字之间的间距 */
+.news-card {
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
-.sidebar-text {
-  font-size: 16px; /* 文字大小 */
+.news-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.news-list {
-  flex: 2; /* 设置新闻列表宽度 */
+.news-thumbnail {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
 }
 
-.news-item {
-  margin-bottom: 20px; /* 增加新闻项之间的间距 */
-  border-bottom: 1px solid #958787; /* 添加新闻项之间的分割线 */
-  padding-bottom: 10px; /* 添加底部内边距 */
+.news-content {
+  padding: 15px;
 }
 
 .news-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-  display: block;
-  margin-bottom: 5px;
+  margin-top: 0;
+  font-size: 1.5em;
 }
 
-.news-title:hover {
-  text-decoration: underline;
-}
-.news-image {
-  width: 100px;
-  height: 100px;
-  margin-right: 10px;
-  object-fit: cover;
+.news-body {
+  font-size: 1em;
+  line-height: 1.6;
+  margin: 15px 0;
 }
 
 .news-meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
-  font-size: 14px;
-  color: #999;
-}
-
-.news-excerpt {
-  margin-top: ½em;
-  line-height: 1.5;
+  justify-content: space-between;
+  font-size: 0.85em;
   color: #666;
 }
 
-.news-label {
-  color: #666;
+.news-link {
+  color: #007bff;
   text-decoration: none;
-  &:hover {
-    color: #333;
+}
+
+.news-read-count {
+  background: #f1f1f1;
+  padding: 3px 8px;
+  border-radius: 15px;
+}
+
+.content-enter-active, .content-leave-active {
+  transition: all 0.3s ease;
+}
+
+.content-enter, .content-leave-to /* .content-leave-active in <2.1.8 */ {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .news-grid {
+    grid-template-columns: 1fr;
   }
+}
+
+.news-thumbnail.default-thumbnail {
+  background-color: #f0f0f0; /* 默认背景颜色，或者可以设置为默认图片 */
+  background-image: url('path_to_default_image.jpg'); /* 设置默认图片路径 */
+  background-size: cover;
+  background-position: center;
 }
 </style>
