@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from "@/views/Home.vue"
 import Group from "@/views/Group.vue"
 import Software from "@/views/Software.vue"
@@ -13,7 +13,7 @@ import Login from '@/views/Login.vue'
 import PostPaper from '@/views/PostPaper.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",

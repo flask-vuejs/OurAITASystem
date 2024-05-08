@@ -13,6 +13,10 @@ class HttpCode(object):
     paramserror=400
 
 def _restful_result(code,message,data):
+    # 将字典转换为JSON格式的HTTP响应---浏览器接收到的是可读的JSON数据
+    # code:api调用的状态码
+    # message:api调用的请求结果的描述性信息
+    # data:api调用的返回数据
     return jsonify({"code":code,"message":message or "","data":data or {}})
 
 def ok(message=None,data=None):
