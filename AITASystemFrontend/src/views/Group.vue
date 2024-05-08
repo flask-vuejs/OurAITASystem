@@ -3,9 +3,9 @@
     <el-text class="group-title-text" size="large">教师队伍</el-text>
     <hr/>
     <el-row class="groupInfo">
-        <el-col class="groupCol" v-for="teacherInfo in teacherInfoList" :key="teacherInfo.id" :span="8">
+        <el-col class="groupCol" v-for="group in groups" :key="group.group_id" :span="8">
             <el-card class="group-card" :body-style="{ padding: '0px' }">
-                <el-image class="group-image" :src="teacherInfo.photoUrl" fit="cover">
+                <el-image class="group-image" src="/personal.jpg" fit="cover">
                     <template #placeholder>
                         <div class="image-slot">Loading<span class="dot">...</span></div>
                     </template>
@@ -16,9 +16,9 @@
                     </template>
                 </el-image>
                 <div style="padding: 14px">
-                    <span>{{ teacherInfo.name }}</span>
+                    <span>{{ group.group_person_name }}</span>
                     <div class="bottom">
-                        <span>{{ teacherInfo.detail }}</span>
+                        <span>{{ group.group_person_description }}</span>
                     </div>
                 </div>
             </el-card>
@@ -27,9 +27,9 @@
     <el-text class="group-title-text" size="large">学生队伍</el-text>
     <hr/>
     <el-row class="groupInfo">
-        <el-col class="groupCol" v-for="studentInfo in studentInfoList" :key="studentInfo.id" :span="8">
+        <el-col class="groupCol" v-for="group in groups" :key="group.group_id" :span="8">
             <el-card class="group-card" :body-style="{ padding: '0px' }">
-                <el-image class="group-image" :src="studentInfo.photoUrl" fit="cover">
+                <el-image class="group-image" src="/personal.jpg" fit="cover">
                     <template #placeholder>
                         <div class="image-slot">Loading<span class="dot">...</span></div>
                     </template>
@@ -40,19 +40,15 @@
                     </template>
                 </el-image>
                 <div style="padding: 14px">
-                    <span>{{ studentInfo.name }}</span>
+                    <span>{{ group.group_person_name }}</span>
                     <div class="bottom">
-                        <span>{{ studentInfo.detail }}</span>
+                        <span>{{ group.group_person_description }}</span>
                     </div>
                 </div>
             </el-card>
         </el-col>
     </el-row>
   </div>
-  <div>
-  <h2>{{ groupData?.group_person_name }}</h2>
-  <p>Group ID: {{ groupData?.group_id }}</p>
-</div>
 </template>
 
 <script setup lang="ts" name="">
@@ -60,7 +56,6 @@
     import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import VueAxios from 'vue-axios';
-    
     import axios from 'axios'; 
 interface GroupData {
   group_id: number;
@@ -72,15 +67,15 @@ interface GroupData {
   group_person_content: string;
   group_person_papers: string;
   };
-let groupData = ref<GroupData | null>(null);
-
+let groups = ref<GroupData[]>([]);
 
 async function fetchGroupData() {
   try {
-    const response = await axios.get<GroupData>('http://127.0.0.1:5000/datasets/query/group');
-    groupData.value = response.data;
-    console.log(groupData);
-    console.log('Type of groupData:', typeof groupData);
+    const response = await axios.get<GroupData[]>('http://127.0.0.1:5000/datasets/query/group');
+    // console.log(response)
+    groups.value = response.data;
+    //console.log(groups.value);
+    //console.log('Type of groupData:', typeof groups);
   } catch (error) {
     console.error('Failed to fetch group data:', error);
   }
@@ -91,7 +86,11 @@ onMounted(fetchGroupData);
     * 路由对象
     */
     const route = useRoute();
+    // useRoute没有参数，返回一个包含当前路由信息的对象，
+    // 如路径（path）、查询参数（query）、参数（params）等
     let {query} = toRefs(route)
+    // 将route对象中的query属性转换为一个响应式引用（ref），
+    // 并将其赋值给一个新的变量query
 
     type teacherInfoInter = {
         id:string,
@@ -166,6 +165,7 @@ onMounted(fetchGroupData);
                     id: "001",
                     name: "云计算测试01",
                     photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
+                    
                     detail: "什么什么人",
                 },
                 {

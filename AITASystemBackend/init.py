@@ -2,9 +2,11 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
-
+from flask_wtf import CSRFProtect
 from exts import db
 from Papers import papers  
+from Group import group
+from cmsbackend import views
 
 def create_app():
     app = Flask(__name__)
@@ -14,7 +16,13 @@ def create_app():
     # 根据自己本地的mysql 数据库连接信息进行修改
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123@localhost:3306/mydb1'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
+    csrf = CSRFProtect()
+    csrf.init_app(app)
+    # 排除cmsapi的csrf验证
+    csrf.exempt(views.cmsapi)
     db.init_app(app)
     migrate=Migrate(app,db)
     app.register_blueprint(papers)
+    app.register_blueprint(views.cmsapi)
+    app.register_blueprint(group)
     return app

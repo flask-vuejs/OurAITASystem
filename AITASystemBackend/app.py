@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request
 import json
 import uuid
 from models import *
-
+from AIdata import *
 from init import create_app
 app = create_app()
 
@@ -52,37 +52,6 @@ def recreate_datasets():    # 重新创建数据库示例（⚠️注意：重�
     return "recreate datasets successfully"
 
 
-@app.route('/datasets/add_fake_data/group/')
-def add_fake_data_group():  # 示例：添加虚拟数据到 Group 表中
-    fake_group_person = Group(
-        type="bioinformatic",
-        role="student",
-        person_name="老丁",
-        person_description="少爷",
-        person_image_url="xxx",
-        person_content="老丁简称少爷",
-        person_papers="暂无"
-    )
-    db.session.add(fake_group_person)
-    db.session.commit()
-    return "添加group数据库示例成功"
-
-
-@app.route('/datasets/query/group/')
-def query_group():  # 示例：从 Group 表中查询数据
-    query = Group.query.filter_by(group_person_name="老丁").first()
-    # return f"name={query.group_person_name}"
-    data = {
-               "group_id":query.group_id,
-               "group_type":query.group_type,
-               "group_role":query.group_role,
-               "group_person_name":query.group_person_name,
-               "group_person_description":query.group_person_description,
-               "group_person_image_url":query.group_person_image_url,
-               "group_person_content":query.group_person_content,
-               "group_person_papers":query.group_person_papers,
-        }
-    return jsonify(data)
 
 # 从news表中查询数据
 @app.route('/all_news')
@@ -110,6 +79,41 @@ def get_all_news():
         return jsonify(response), 404
 # Flask 路由结束
 
+
+#从data表查数据
+@app.route('/datasets')
+def get_all_datasets():
+    print("111")
+    # 获取查询参数
+    type_param = request.args.get('type')
+    # 打印参数
+    print("查询参数 type_param:", type_param)
+    # 如果没有传递 type 参数，则默认查询所有数据
+    if not type_param:
+        datas = Data.query.all()
+    else:
+        # 根据 type 参数来过滤数据
+        datas = Data.query.filter_by(data_type=type_param).all()
+
+    data_list = []
+    for data in datas:
+        data_dict = {
+            "data_id": data.data_id,
+            "data_title": data.data_title,
+            "data_content": data.data_content,
+            "data_date": data.data_date,
+            "data_author": data.data_author,
+            "data_link": data.data_link,
+            "data_read_count": data.data_read_count,
+            "data_image_url": data.data_image_url,
+        }
+        data_list.append(data_dict)
+
+    if data_list:
+        return jsonify(data_list)
+    else:
+        response = {"message": "No data records found in the database."}
+        return jsonify(response), 404
 
 if __name__ == '__main__':
     #app.debug = True

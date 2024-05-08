@@ -2,11 +2,12 @@ from datetime import datetime
 from exts import db
 
 
-# 文章模型
+# 论文模型
 class PapersModel(db.Model):
     __tablename__ = 'papers'
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     title = db.Column(db.String(200),nullable=False)
+    image_url = db.Column(db.String(255),nullable=False) #图片链接
     content=db.Column(db.Text,nullable=False)
     create_time=db.Column(db.DateTime,default=datetime.now)
     author=db.Column(db.String(100),nullable=False)
