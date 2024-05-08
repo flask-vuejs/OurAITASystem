@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask import Blueprint
-from AIdata import *
+from models import *
 
 datasets=Blueprint('datasets',__name__)   #创建蓝图
 
