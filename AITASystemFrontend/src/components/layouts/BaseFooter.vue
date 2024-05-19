@@ -4,7 +4,7 @@
         <div class="footer-main">
           <div class="logo">
             <n-link to="/">
-              <img src="/logo.png" alt="Logo" style="width: 350px;">
+              <img src="../../../public/logo.png" alt="Logo" style="width: 350px;">
             </n-link>
           </div>
           <p>庞善臣教授带领的人工智能理论与应用创新研<br>究团队</p>

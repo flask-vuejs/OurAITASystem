@@ -2,7 +2,7 @@
   <div class="header">
     <el-menu class="main-menu" mode="horizontal" :default-active="router.currentRoute.value.fullPath" :ellipsis="false" :router="true">
       <a href="/">
-        <img class="main-menu-logo" src="/logo.png">
+        <img class="main-menu-logo" src="../../../public/logo.png">
       </a>
       <div class="flex-grow"/>
       <el-menu-item index="/home">首页</el-menu-item>
