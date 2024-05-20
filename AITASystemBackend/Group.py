@@ -6,7 +6,11 @@ group=Blueprint('group',__name__)   #创建蓝图
 
 @group.route('/datasets/query/group/')
 def query_group():  # 示例：从 Group 表中查询数据
-    query = Group.query.all()
+    param_type=request.args.get('group_type')
+    if param_type:
+        query=Group.query.filter_by(group_type=param_type).all()
+    else:
+        query = Group.query.all()
     group_list=[]
     for i in query:
         group_dict={
@@ -29,17 +33,18 @@ def query_group():  # 示例：从 Group 表中查询数据
 @group.route('/datasets/add_data/group/')
 def add_fake_data_group():  # 示例：添加虚拟数据到 Group 表中
     group_person = Group(
-        type="cloudcomputing",
-        role="student",
-        person_name="李博泽",
+        type="petroleumsoftware",
+        role="teacher",
+        person_name="石油工业软件老师2",
         person_description="三进团队成员",
         person_image_url="https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-        person_content="大二学生",
+        person_content="老师",
         person_papers="无"
     )
     db.session.add(group_person)
     db.session.commit()
     return "添加group数据库示例成功"
+
 
 
 # cloudcomputing
