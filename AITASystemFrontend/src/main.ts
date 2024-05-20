@@ -8,7 +8,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue' //导入 Elementp
 
 import App from './App.vue'
 import router from './router'
-
+// import http from '@/utils/http'
 
 const app = createApp(App)
 app.use(createPinia())

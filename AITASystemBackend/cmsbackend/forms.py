@@ -40,3 +40,16 @@ class AddPapersForm(BaseForm):
             InputRequired(message="论文地址不能为空！")
         ]
     )  
+
+# 添加轮播图验证
+class AddBannerForm(BaseForm):
+    name=StringField(validators=[InputRequired(message="轮播图名称不能为空！")])
+    image_url=StringField(validators=[InputRequired(message="图片地址不能为空！")])
+    link_url=StringField(validators=[InputRequired(message="链接地址不能为空！")])
+
+# 编辑轮播图验证
+class EditBannerForm(BaseForm):
+    banner_id=IntegerField(validators=[InputRequired(message="轮播图id不能为空！")])
+    name=StringField(validators=[InputRequired(message="轮播图名称不能为空！")])
+    image_url=StringField(validators=[InputRequired(message="图片地址不能为空！")])
+    link_url=StringField(validators=[InputRequired(message="链接地址不能为空！")])

@@ -62,14 +62,14 @@ class CommentModel(db.Model):
 
 
 # # 轮播图模型
-# class BannerModel(db.Model):
-#     __tablename__ = 'banner'  
-#     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
-#     name=db.Column(db.String(255),nullable=False)  # 轮播图名称
-#     image_url = db.Column(db.String(255),nullable=False) #图片链接
-#     link_url = db.Column(db.String(255),nullable=False)  #跳转链接
+class BannerModel(db.Model):
+    __tablename__ = 'banner'  
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    name=db.Column(db.String(255),nullable=False)  # 轮播图名称
+    image_url = db.Column(db.String(255),nullable=False) #图片链接
+    link_url = db.Column(db.String(255),nullable=False)  #跳转链接
 #     priority = db.Column(db.Integer,default=0)  # 优先级
-#     create_time = db.Column(db.DateTime,default=datetime.now) # 创建时间
+    create_time = db.Column(db.DateTime,default=datetime.now) # 创建时间
 
 
 

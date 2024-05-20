@@ -3,9 +3,9 @@
     <el-text class="group-title-text" size="large">教师队伍</el-text>
     <hr/>
     <el-row class="groupInfo">
-        <el-col class="groupCol" v-for="group in groups" :key="group.group_id" :span="8">
+        <el-col class="groupCol" v-for="teacher in teachers" :key="teacher.group_id" :span="8">
             <el-card class="group-card" :body-style="{ padding: '0px' }">
-                <el-image class="group-image" src="/personal.jpg" fit="cover">
+                <el-image class="group-image" :src="formatImageUrl(teacher.group_person_image_url)" fit="cover">
                     <template #placeholder>
                         <div class="image-slot">Loading<span class="dot">...</span></div>
                     </template>
@@ -16,9 +16,9 @@
                     </template>
                 </el-image>
                 <div style="padding: 14px">
-                    <span>{{ group.group_person_name }}</span>
+                    <span>{{ teacher.group_person_name }}</span>
                     <div class="bottom">
-                        <span>{{ group.group_person_description }}</span>
+                        <span>{{ teacher.group_person_description }}</span>
                     </div>
                 </div>
             </el-card>
@@ -27,9 +27,9 @@
     <el-text class="group-title-text" size="large">学生队伍</el-text>
     <hr/>
     <el-row class="groupInfo">
-        <el-col class="groupCol" v-for="group in groups" :key="group.group_id" :span="8">
+        <el-col class="groupCol" v-for="student in students" :key="student.group_id" :span="8">
             <el-card class="group-card" :body-style="{ padding: '0px' }">
-                <el-image class="group-image" src="/personal.jpg" fit="cover">
+                <el-image class="group-image" :src="formatImageUrl(student.group_person_image_url)" fit="cover">
                     <template #placeholder>
                         <div class="image-slot">Loading<span class="dot">...</span></div>
                     </template>
@@ -40,9 +40,9 @@
                     </template>
                 </el-image>
                 <div style="padding: 14px">
-                    <span>{{ group.group_person_name }}</span>
+                    <span>{{ student.group_person_name }}</span>
                     <div class="bottom">
-                        <span>{{ group.group_person_description }}</span>
+                        <span>{{ student.group_person_description }}</span>
                     </div>
                 </div>
             </el-card>
@@ -67,296 +67,53 @@ interface GroupData {
   group_person_content: string;
   group_person_papers: string;
   };
-let groups = ref<GroupData[]>([]);
+
+// 分别创建ref来存储教师和学生数据
+let teachers = ref<GroupData[]>([]);
+let students = ref<GroupData[]>([]);
+// 图片地址规范化
+const server_host='http://127.0.0.1:5000'
+const formatImageUrl=(image_url:string)=>{
+        if(image_url.startsWith('http')){
+          return image_url
+        }else{
+          return server_host+image_url
+        }
+      }
 
 async function fetchGroupData() {
   try {
-    const response = await axios.get<GroupData[]>('http://127.0.0.1:5000/datasets/query/group');
-    // console.log(response)
-    groups.value = response.data;
-    //console.log(groups.value);
-    //console.log('Type of groupData:', typeof groups);
+    const response = await axios.get<GroupData[]>('http://127.0.0.1:5000/datasets/query/group',{
+        params: {
+          group_type: route.query.type,
+        },
+    });
+    separateGroups(response.data);
   } catch (error) {
     console.error('Failed to fetch group data:', error);
   }
 }
+// 当获取到原始的groups数据后，进行分组
+function separateGroups(data: GroupData[]) {
+  teachers.value = data.filter(group => group.group_role == 'teacher');
+  students.value = data.filter(group => group.group_role == 'student');
+}
 onMounted(fetchGroupData);
 
-    /**
-    * 路由对象
-    */
-    const route = useRoute();
-    // useRoute没有参数，返回一个包含当前路由信息的对象，
-    // 如路径（path）、查询参数（query）、参数（params）等
-    let {query} = toRefs(route)
-    // 将route对象中的query属性转换为一个响应式引用（ref），
-    // 并将其赋值给一个新的变量query
+/**
+* 路由对象
+*/
+const route = useRoute();
+// useRoute没有参数，返回一个包含当前路由信息的对象，
+// 如路径（path）、查询参数（query）、参数（params）等
+let {query} = toRefs(route)
+// 将route对象中的query属性转换为一个响应式引用（ref），
+// 并将其赋值给一个新的变量query
 
-    type teacherInfoInter = {
-        id:string,
-        name:string,
-        photoUrl:string,
-        detail:string
-    }
-    type studentInfoInter = {
-        id: string,
-        name: string,
-        photoUrl: string,
-        detail: string
-    }
-
-    let teacherInfoList:Array<teacherInfoInter> = reactive([{id: "", name: "", photoUrl:"", detail:""}])
-    let studentInfoList:Array<studentInfoInter> = reactive([{id: "", name: "", photoUrl:"", detail:""}])
-
-    watchEffect(()=>{
-        if(route.query.type == "cloudcomputing"){
-            Object.assign(teacherInfoList, [
-                {
-                    id: "001",
-                    name: "云计算测试01",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "003",
-                    name: "云计算测试03",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                }
-            ])
-            Object.assign(studentInfoList, [
-                {
-                    id: "001",
-                    name: "云计算测试01",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "003",
-                    name: "云计算测试03",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                }
-            ])
-        }
-        if(route.query.type == "bioinformatic"){
-            Object.assign(teacherInfoList, [
-                {
-                    id: "001",
-                    name: "生信测试01",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "生信测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "003",
-                    name: "生信测试03",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                }
-            ])
-            Object.assign(studentInfoList, [
-                {
-                    id: "001",
-                    name: "云计算测试01",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "003",
-                    name: "云计算测试03",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                }
-            ])
-        }
-        if(route.query.type == "petroleumsoftware"){
-            Object.assign(teacherInfoList, [
-                {
-                    id: "001",
-                    name: "石油工业软件测试01",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "石油工业软件测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "003",
-                    name: "石油工业软件测试03",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                }
-            ])
-            Object.assign(studentInfoList, [
-                {
-                    id: "001",
-                    name: "云计算测试01",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "002",
-                    name: "云计算测试02",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                },
-                {
-                    id: "003",
-                    name: "云计算测试03",
-                    photoUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-                    detail: "什么什么人",
-                }
-            ])
-        }
-    })
+// 使用watchEffect监听route.query.type的变化
+watchEffect(() => {
+  fetchGroupData(); // 直接调用已定义的fetchGroupData函数
+});
 
 </script>
 
