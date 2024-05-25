@@ -4,14 +4,20 @@
     <div v-if="newsList.length > 0" class="news-grid">
       <div v-for="(news, index) in newsList" :key="news.news_id" class="news-card" @click="toggleNews(index)">
         <!-- 检查图片数组并展示第一张图片 -->
-        <div class="news-thumbnail" v-if="news.news_image_url && news.news_image_url.length > 0" :style="{ backgroundImage: 'url(' + news.news_image_url[0] + ')' }"></div>
+        <div class="news-thumbnail" 
+        v-if="news.news_image_url && news.news_image_url.length > 0" 
+        :style="{ backgroundImage: 'url(' + formatImageUrl(news.news_image_url) + ')' }"
+        >
+      </div>
         <!-- 可以添加一个else条件显示默认图片或不显示图片 -->
-        <div v-if="!news.news_image_url || news.news_image_url.length === 0" class="news-thumbnail default-thumbnail"></div>
-        <div class="news-content">
+        <div v-if="!news.news_image_url || news.news_image_url.length === 0" class="news-thumbnail default-thumbnail">
+        </div>
+        
+        <div class="news-content" @click="redirectToLink(news.news_link)">
           <h3 class="news-title">{{ news.news_title }}</h3>
-          <transition name="content">
+          <!-- <transition name="content">
             <p class="news-body" v-if="activeIndex === index">{{ news.news_content }}</p>
-          </transition>
+          </transition> -->
           <div class="news-meta">
             <span class="news-author">作者: {{ news.news_author }}</span>
             <span class="news-date">日期: {{ news.news_date }}</span>
@@ -26,9 +32,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,onBeforeMount } from 'vue';
 import axios from 'axios';
-
+// 图片地址规范化
+const server_host='http://127.0.0.1:5000'
+const formatImageUrl=(image_url:string)=>{
+        if(image_url.startsWith('http')){
+          return image_url
+        }else{
+          return server_host+image_url
+        }
+}
 interface News {
   news_id: number;
   news_title: string;
@@ -44,23 +58,50 @@ interface News {
 const newsList = ref<News[]>([]);
 const activeIndex = ref<number | null>(null); // 用于跟踪当前展开的新闻索引
 
+const getNewsData = async () => {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/all_news');
+    if (response.data) {
+      newsList.value = response.data;
+    } else {
+      console.error('Failed to fetch news data.');
+    }
+  } catch (error) {
+    console.error('An error occurred while fetching news:', error);
+  }
+};
 onMounted(() => {
-  axios.get('http://127.0.0.1:5000/all_news')
-    .then((response) => {
-      if (response.data) {
-        newsList.value = response.data;
-      } else {
-        console.error('Failed to fetch news data.');
-      }
-    })
-    .catch((error) => {
-      console.error('An error occurred while fetching news:', error);
-    });
+  getNewsData();
 });
+// onMounted(() => {
+//   axios.get('http://127.0.0.1:5000/all_news')
+//     .then((response) => {
+//       if (response.data) {
+//         newsList.value = response.data;
+//       } else {
+//         console.error('Failed to fetch news data.');
+//       }
+//     })
+//     .catch((error) => {
+//       console.error('An error occurred while fetching news:', error);
+//     });
+// });
 
 const toggleNews = (index: number) => {
   activeIndex.value = activeIndex.value === index ? null : index;
 };
+const redirectToLink = (link: string) => {
+  window.open(link, '_blank');
+};
+
+onBeforeMount(() => {
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('news-meta') || target.classList.contains('news-link')) {
+      event.stopPropagation();
+    }
+  });
+});
 </script>
 
 <style scoped>

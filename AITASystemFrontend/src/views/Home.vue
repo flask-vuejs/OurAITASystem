@@ -14,8 +14,8 @@
           </template>
           <div class="message-card-content-box">
             <ul class="message-card-content-ul">
-              <li v-for="news in newsList" :key="news.id" class="message-card-content-li">
-                <a :href="news.link" target="_block" class="message-card-content-a">{{ news.title }}</a>
+              <li v-for="news in newsList" :key="news.news_id" class="message-card-content-li">
+                <a :href="news.news_link" target="_block" class="message-card-content-a">{{ news.news_title }}</a>
               </li>
             </ul>
           </div>
@@ -50,7 +50,7 @@
       <vue3-seamless-scroll :list="imageList" class="paper-scroll" direction="left" hover>
       <div class="paper-scroll-item" >
         <div v-for="image in imageList" :key="image.id">
-          <a :href="image.url"><img :src="image.imageUrl" alt="Paper Image" :title="image.title"/></a>
+          <a href=""><img :src="formatImageUrl(image.image_url)" alt="Paper Image" :title="image.title"/></a>
         </div>
       </div>
     </vue3-seamless-scroll>
@@ -59,42 +59,64 @@
 </template>
 
 <script setup lang="ts" name="Home">
-  import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
-  import {Vue3SeamlessScroll} from "vue3-seamless-scroll";
-
-  let newsList = ref([
-    {
-      id: "asdfasd01",
-      title: "测试动态 01",
-      date: "2024-01-01",
-      link: "testNews/001"
-    },
-    {
-      id: "asdfasd02",
-      title: "测试动态 02",
-      date: "2024-01-01",
-      link: "testNews/002"
-    },
-    {
-      id: "asdfasd03",
-      title: "测试动态 03",
-      date: "2024-01-01",
-      link: "testNews/003"
-    },
-    {
-      id: "asdfasd04",
-      title: "测试动态 04",
-      date: "2024-01-01",
-      link: "testNews/004"
-    },
-    {
-      id: "asdfasd05",
-      title: "测试动态 05",
-      date: "2024-01-01",
-      link: "testNews/005"
-    },
-  ])
+import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
+import {Vue3SeamlessScroll} from "vue3-seamless-scroll";
+// 图片地址规范化
+const server_host='http://127.0.0.1:5000'
+const formatImageUrl=(image_url:string)=>{
+        if(image_url.startsWith('http')){
+          return image_url
+        }else{
+          return server_host+image_url
+        }
+}
+// 获取论文列表
+interface Papers{
+    id:number;
+    title:string;
+    author:string;
+    content:string;
+    create_time:string;
+    image_url:string;
+}
+let imageList=ref<Papers[]>([])
+async function getPapers(){
+    try{
+      const res = await axios.get('http://127.0.0.1:5000/Papers/list')
+      imageList.value = res.data
+    }catch(err){
+      console.log(err)
+    }
+}
+// 获取新闻列表
+interface News {
+  news_id: number;
+  news_title: string;
+  news_content: string;
+  news_date: string;
+  news_author: string;
+  news_link: string;
+  news_read_count: number;
+  news_image_url: string;
+  label_id: number;
+}
+const newsList = ref<News[]>([]);
+  const getNews = async () => {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/all_news');
+    if (response.data) {
+      newsList.value = response.data;
+    } 
+  } catch (error) {
+    console.error(error);
+  }
+};
+onMounted(()=>{
+  getPapers()
+  getNews()
+})
 
   let awardList = ref([
     {
@@ -129,36 +151,9 @@
     },
   ])
 
-  let noticeInfo = ref("测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！测试通知！！")
+  let noticeInfo = ref("人工智能理论与应用创新研究团队     人工智能理论与应用创新研究团队      人工智能理论与应用创新研究团队")
 
-  let imageList = ref([
-    {
-      id: "qwerqwer01",
-      url: "xxx",
-      imageUrl: "https://images.pexels.com/photos/11278221/pexels-photo-11278221.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-      title: "Paper01"
-    },
-    {
-      id: "qwerqwer02",
-      url: "xxx",
-      imageUrl: "https://images.pexels.com/photos/18965344/pexels-photo-18965344.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-      title: "Paper02"
-    },
-    {
-      id: "qwerqwer03",
-      url: "xxx",
-      imageUrl: "https://images.pexels.com/photos/20224149/pexels-photo-20224149.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-      title: "Paper03"
-    },
-    {
-      id: "qwerqwer04",
-      url: "xxx",
-      imageUrl: "https://images.pexels.com/photos/10317493/pexels-photo-10317493.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-      title: "Paper04"
-    },
-  ])
 
-  
 
 </script>
 
@@ -174,7 +169,7 @@
   .message-card-content-ul {
     list-style: none;
     .message-card-content-li {
-      font-size: 13px;
+      font-size: 18px;
       padding-bottom: 10px;
       .message-card-content-a {
         display: inline-block;
@@ -200,8 +195,9 @@
 .paper-scroll-item {
   display: flex;
   img {
-  width: 200px;
+  width: auto;
   height: 200px;
+  object-fit: cover;
   margin: 0 10px;
   }
 }
