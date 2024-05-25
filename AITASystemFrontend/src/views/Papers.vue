@@ -12,7 +12,7 @@
             <p class="create-time">Create Time: {{ paper.create_time }}</p>
           </div>
         </div>
-        <img v-if="paper.image" :src="paper.image" alt="Paper Image" class="paper-image-left" />
+        <img v-if="paper.image_url" :src="formatImageUrl(paper.image_url)" alt="Paper Image" class="paper-image-left" />
       </div>
     </div>
     <p v-else>No papers found.</p>
@@ -27,33 +27,23 @@ import axios from 'axios';
 import { createEditor } from '@wangeditor/editor';
 import { pa } from 'element-plus/es/locale';
 import { onMounted } from 'vue';
+// 图片地址规范化
+const server_host='http://127.0.0.1:5000'
+const formatImageUrl=(image_url:string)=>{
+        if(image_url.startsWith('http')){
+          return image_url
+        }else{
+          return server_host+image_url
+        }
+}
 interface Papers{
     id:number;
     title:string;
     author:string;
     content:string;
     create_time:string;
-    image?:string;
+    image_url?:string;
 }
-const mockPapers: Papers[] = [
-  {
-    id: 1,
-    title: '论文标题1',
-    author: '作者A',
-    content: '这是论文1的内容摘要...',
-    create_time: '2023-04-01',
-    image: './public/personal.jpg',
-  },
-  {
-    id: 2,
-    title: '论文标题2',
-    author: '作者B',
-    content: '这是论文2的内容摘要...',
-    create_time: '2023-04-02',
-    image: './public/personal.jpg',
-  },
-  // 可以继续添加更多模拟数据...
-];
 // const route = useRoute()
 let paperList=ref<Papers[]|null>([])
 async function getPapers(){
@@ -112,7 +102,7 @@ onMounted(()=>{
 .paper-image-left {
   margin-right: 2rem; /* 图片与内容间的右边距 */
   max-width: 30%; /* 控制图片最大宽度，可根据需要调整 */
-  height: auto;
+  height: 250px;
   object-fit: cover;
   border-radius: 8px;
   margin-top: 0; /* 移除顶部外边距 */

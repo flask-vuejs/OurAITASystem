@@ -79,7 +79,7 @@ const formatImageUrl=(image_url:string)=>{
         }else{
           return server_host+image_url
         }
-      }
+}
 
 async function fetchGroupData() {
   try {

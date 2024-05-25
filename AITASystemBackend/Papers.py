@@ -73,6 +73,7 @@ def get_papers_list():
             "papers_id":paper.id,
             "title":paper.title,
             "content":paper.content,
+            "image_url":paper.image_url,
             "author":paper.author,
             "create_time":paper.create_time,
         }

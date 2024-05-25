@@ -61,6 +61,7 @@ class CommentModel(db.Model):
    
 
 
+
 # # 轮播图模型
 class BannerModel(db.Model):
     __tablename__ = 'banner'  
