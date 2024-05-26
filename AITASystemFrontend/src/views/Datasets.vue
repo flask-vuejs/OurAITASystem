@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts" name="Datasets">
-import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 import axios from 'axios';
 
 interface Data {
@@ -38,14 +38,10 @@ interface Data {
   label_id: number;
 }
 
-let dataList = ref<Data[]>([]);
-
+const dataList = ref<Data[]>([]);
 const route = useRoute();
-const typeParam = route.query.type as string;
 
-console.log('Type 参数值:', typeParam);
-
-onMounted(() => {
+const fetchData = (typeParam: string) => {
   axios.get('http://127.0.0.1:5000/datasets', {
     params: {
       type: typeParam
@@ -55,15 +51,21 @@ onMounted(() => {
     if (response.data) {
       dataList.value = response.data;
     } else {
-      console.error('Failed to fetch data data.');
+      console.error('Failed to fetch data.');
     }
   })
   .catch((error) => {
     console.error('An error occurred while fetching data:', error);
   });
-});
+};
 
+watchEffect(() => {
+  const typeParam = route.query.type as string;
+  console.log('Type 参数值:', typeParam);
+  fetchData(typeParam);
+});
 </script>
+
 
 <style scoped lang="less">
 .datasets-container {
