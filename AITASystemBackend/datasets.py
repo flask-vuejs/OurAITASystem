@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask import Blueprint
 from models import *
+import restful
 
 datasets=Blueprint('datasets',__name__)   #创建蓝图
 
@@ -26,7 +27,7 @@ def get_all_datasets():
             "data_id": data.data_id,
             "data_title": data.data_title,
             "data_content": data.data_content,
-            "data_date": data.data_date,
+            "data_date": data.data_date.strftime('%Y-%m-%d %H:%M:%S'),
             "data_author": data.data_author,
             "data_link": data.data_link,
             "data_read_count": data.data_read_count,
@@ -39,3 +40,27 @@ def get_all_datasets():
     else:
         response = {"message": "No data records found in the database."}
         return jsonify(response), 404
+
+# 数据集详情
+@datasets.route('/datasets/detail')
+def get_datasets_detail():
+    data_id = request.args.get('id')
+    if data_id:
+        query = Data.query.get(data_id)
+        data={
+            "data_id": query.data_id,
+            "data_title": query.data_title,
+            "data_content": query.data_content,
+            "data_date": query.data_date.strftime("%Y年%m月%d日"),
+            "data_author": query.data_author,
+            "data_link": query.data_link,
+            "data_read_count": query.data_read_count,
+            "data_image_url": query.data_image_url,
+            "data_type": query.data_type
+        }
+        if data:
+            return restful.ok(data=data)
+        else:
+            return restful.params_error(message="数据集不存在!")
+    else:
+        return restful.params_error(message="数据集id不存在!")

@@ -4,7 +4,7 @@
     <hr/>
     <el-row class="groupInfo">
         <el-col class="groupCol" v-for="teacher in teachers" :key="teacher.group_id" :span="8">
-            <el-card class="group-card" :body-style="{ padding: '0px' }">
+            <el-card class="group-card" :body-style="{ padding: '0px' }" @click="toDetail(teacher)">
                 <el-image class="group-image" :src="formatImageUrl(teacher.group_person_image_url)" fit="cover">
                     <template #placeholder>
                         <div class="image-slot">Loading<span class="dot">...</span></div>
@@ -28,7 +28,7 @@
     <hr/>
     <el-row class="groupInfo">
         <el-col class="groupCol" v-for="student in students" :key="student.group_id" :span="8">
-            <el-card class="group-card" :body-style="{ padding: '0px' }">
+            <el-card class="group-card" :body-style="{ padding: '0px' }" @click="toDetail(student)" >
                 <el-image class="group-image" :src="formatImageUrl(student.group_person_image_url)" fit="cover">
                     <template #placeholder>
                         <div class="image-slot">Loading<span class="dot">...</span></div>
@@ -52,11 +52,11 @@
 </template>
 
 <script setup lang="ts" name="">
-    import { ElFormItem } from 'element-plus';
-    import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
-    import VueAxios from 'vue-axios';
-    import axios from 'axios'; 
+import { ElFormItem } from 'element-plus';
+import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import VueAxios from 'vue-axios';
+import axios from 'axios'; 
 interface GroupData {
   group_id: number;
   group_type: string;
@@ -71,6 +71,15 @@ interface GroupData {
 // 分别创建ref来存储教师和学生数据
 let teachers = ref<GroupData[]>([]);
 let students = ref<GroupData[]>([]);
+// 跳转到详情页
+const router = useRouter();
+const toDetail = (group:GroupData) => {
+  router.push({ 
+    path: "/groupdetail", 
+    query: { id: group.group_id } 
+  });
+  //router.push({ path: '/groupdetail'})
+};
 // 图片地址规范化
 const server_host='http://127.0.0.1:5000'
 const formatImageUrl=(image_url:string)=>{

@@ -48,6 +48,7 @@ class PapersModel(db.Model):
     author=db.Column(db.String(100),nullable=False)
     # author_id=db.Column(db.String(100),db.ForeignKey('users.id'))   // 登录注册写完后再添加
 
+
 # 评论模型
 class CommentModel(db.Model):
     __tablename__ = 'comment'

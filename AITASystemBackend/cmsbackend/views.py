@@ -4,7 +4,7 @@ import os
 import restful
 from datetime import datetime
 from config import BASE_DIR
-from models import PapersModel,BannerModel
+from models import *
 from exts import db
 
 
@@ -30,6 +30,7 @@ def get_paper_image():
 # @cmsapi.route('/media/<path:path>')
 # def serve_media(path):
 #     return send_from_directory('aitasystembackend/media', path)
+
 
 
 
@@ -152,3 +153,69 @@ def delete_papers():
 
 
 
+# 团队列表
+@cmsapi.route('/group/list')
+def get_group_list():
+    # group_type=request.args.get('group_type')
+    # if group_type:
+    #     query=Group.query.filter_by(group_type=group_type).all()
+    # else:
+    query=Group.query.all()
+    group_list=[]
+    for i in query:
+        group_dict={
+            "group_id":i.group_id,
+            "group_type":i.group_type,
+            "group_role":i.group_role,
+            "group_person_name":i.group_person_name,
+            "group_person_description":i.group_person_description,
+            "group_person_image_url":i.group_person_image_url,
+            "group_person_content":i.group_person_content,
+            "group_person_papers":i.group_person_papers,
+        }
+        group_list.append(group_dict)
+    if group_list:
+        return restful.ok(data=group_list)
+
+# 新闻列表
+@cmsapi.route('/news/list')
+def get_news_list():
+    datas = News.query.all()
+    news_list=[]
+    for data in datas:
+        news_dict = {
+            "news_id":data.news_id,
+            "news_title":data.news_title,
+            "news_content":data.news_content,
+            "news_date":data.news_date.strftime('%Y-%m-%d %H:%M:%S'),
+            "news_author":data.news_author,
+            "news_link":data.news_link,
+            "news_read_count":data.news_read_count,
+            "news_image_url":data.news_image_url,
+            "label_id":data.label_id,
+        }
+        news_list.append(news_dict)
+    if news_list:
+        return restful.ok(data=news_list)
+
+# 数据集列表
+@cmsapi.route('/datasets/list')
+def get_datasets_list():
+    datas=Data.query.all()
+    if datas:
+        data_list = []
+        for data in datas:
+            data_dict = {
+                "data_id": data.data_id,
+                "data_title": data.data_title,
+                "data_content": data.data_content,
+                "data_author":data.data_author,
+                "data_date": data.data_date.strftime('%Y-%m-%d %H:%M:%S'),
+                "data_link": data.data_link,
+                "data_read_count": data.data_read_count,
+                "data_image_url": data.data_image_url,
+                "data_type":data.data_type 
+            }
+            data_list.append(data_dict)
+        if data_list:
+            return restful.ok(data=data_list)

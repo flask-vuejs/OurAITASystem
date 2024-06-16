@@ -1,8 +1,36 @@
 from flask import Flask, request, jsonify
 from flask import Blueprint
 from models import Group
+import restful
 from exts import db
 group=Blueprint('group',__name__)   #创建蓝图
+
+# group详情页
+@group.route('/datasets/query/group/detail/')
+def query_group_detail():
+    param_id=request.args.get('group_id')
+    print(param_id)
+    #return restful.params_error(message="参数错误")
+    if param_id:
+        query=Group.query.filter_by(group_id=param_id).first()
+        group={
+            "group_id":query.group_id,
+            "group_type":query.group_type,
+            "group_role":query.group_role,
+            "group_person_name":query.group_person_name,
+            "group_person_description":query.group_person_description,
+            "group_person_image_url":query.group_person_image_url,
+            "group_person_content":query.group_person_content,
+            "group_person_papers":query.group_person_papers,
+        }
+        if group:
+            # print(group)
+            return restful.ok(data=group)
+        else:
+            return restful.params_error(message="group_id is not exist")
+    else :
+        return restful.params_error(message="group_id is required")
+    
 
 @group.route('/datasets/query/group/')
 def query_group():  # 示例：从 Group 表中查询数据
@@ -44,6 +72,7 @@ def add_fake_data_group():  # 示例：添加虚拟数据到 Group 表中
     db.session.add(group_person)
     db.session.commit()
     return "添加group数据库示例成功"
+
 
 
 

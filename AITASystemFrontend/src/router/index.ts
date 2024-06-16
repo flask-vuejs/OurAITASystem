@@ -11,6 +11,12 @@ import News from '@/views/News.vue'
 import Contact from '@/views/Contact.vue'
 import Login from '@/views/Login.vue'
 import PostPaper from '@/views/PostPaper.vue'
+import DatasetDetail from '@/views/details/DatasetDetail.vue'
+
+// 详情页
+import GroupDetail from '@/views/details/GroupDetail.vue'
+import PaperDetail from '@/views/details/PaperDetail.vue'
+
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -40,6 +46,11 @@ const router = createRouter({
       component: Group,
     },
     {
+      path: "/groupdetail",
+      name: "groupdetail",
+      component: GroupDetail,
+    },
+    {
       path: "/software",
       name: "software",
       component: Software,
@@ -55,6 +66,11 @@ const router = createRouter({
       component: Datasets,
     },
     {
+      path: "/dataset_detail",
+      name: "dataset_detail",
+      component: DatasetDetail,
+    },
+    {
       path: "/hxxm",
       name: "hengxiang",
       component: Hxxm,
@@ -68,6 +84,11 @@ const router = createRouter({
       path: "/papers",
       name: "papers",
       component: Papers,
+    },
+    {
+      path: "/paper_detail",
+      name: "paper_detail",
+      component: PaperDetail,
     },
     {
       path: "/news",
