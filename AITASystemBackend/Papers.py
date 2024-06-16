@@ -5,6 +5,7 @@ import restful
 from models import *
 from form import PublicPapersForm
 
+
 papers=Blueprint('papers',__name__,url_prefix="/")   #创建蓝图
 
 
@@ -70,7 +71,7 @@ def get_papers_list():
     papers_list=[]
     for paper in papers:
         papers_dict={
-            "papers_id":paper.id,
+            "id":paper.id,
             "title":paper.title,
             "content":paper.content,
             "image_url":paper.image_url,
@@ -86,20 +87,26 @@ def get_papers_list():
 
 
 # 论文详情
-@papers.route("/Papers/detail/<int:papers_id>")
-def get_papers_detail(papers_id):
-    try:
-        paper=PapersModel.query.get(papers_id)
+@papers.route("/Papers/detail/")
+def get_papers_detail():
+    paper_id=request.args.get("paper_id")
+    if paper_id:
+        query=PapersModel.query.get(paper_id)
+        paper={
+            "id":query.id,
+            "title":query.title,
+            "content":query.content,
+            "image_url":query.image_url,
+            "author":query.author,
+            "create_time":query.create_time.strftime("%Y-%m-%d %H:%M:%S")
+        }
         if paper:
-            # comment_count=CommentModel.query.filter_by(papers_id=papers_id).count()
-            return jsonify({
-                "title":paper.title,
-                "content":paper.content,
-                "author":paper.author,
-                "create_time":paper.create_time
-            })
-    except:
-        return "404"
+            return restful.ok(data=paper)
+        else:
+            return restful.params_error(message='论文不存在')
+    else:
+        return restful.params_error(message='论文id不存在')
+
 
 
 # 论文发布评论

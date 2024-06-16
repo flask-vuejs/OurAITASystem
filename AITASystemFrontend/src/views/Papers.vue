@@ -2,7 +2,7 @@
   <div class="papers-container">
     <div v-if="paperList && paperList.length > 0" class="papers-list">
       <div v-for="paper in paperList" :key="paper.id" class="paper-item">
-        <div class="paper-content">
+        <div class="paper-content" @click="to_detail(paper.id)">
           <div class="paper-header">
             <h3 class="paper-title">{{ paper.title }}</h3>
             <p class="author-tag">Author: {{ paper.author }}</p>
@@ -13,6 +13,7 @@
           </div>
         </div>
         <img v-if="paper.image_url" :src="formatImageUrl(paper.image_url)" alt="Paper Image" class="paper-image-left" />
+      
       </div>
     </div>
     <p v-else>No papers found.</p>
@@ -27,6 +28,7 @@ import axios from 'axios';
 import { createEditor } from '@wangeditor/editor';
 import { pa } from 'element-plus/es/locale';
 import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 // 图片地址规范化
 const server_host='http://127.0.0.1:5000'
 const formatImageUrl=(image_url:string)=>{
@@ -36,6 +38,7 @@ const formatImageUrl=(image_url:string)=>{
           return server_host+image_url
         }
 }
+
 interface Papers{
     id:number;
     title:string;
@@ -45,13 +48,26 @@ interface Papers{
     image_url?:string;
 }
 // const route = useRoute()
-let paperList=ref<Papers[]|null>([])
+let paperList=ref<Papers[]>([])
+
+
+// 跳转到详情页
+const router=useRouter()
+const to_detail = (id:number) => {
+    router.push({
+      path: '/paper_detail',
+      query: { id:id },
+    })
+};
+
+
+
 async function getPapers(){
     try{
       const res = await axios.get('http://127.0.0.1:5000/Papers/list')
       paperList.value = res.data
-      console.log(paperList.value)
-      console.log(typeof paperList)
+      // console.log(paperList.value)
+      // console.log(typeof paperList)
     }catch(err){
       console.log(err)
     }
