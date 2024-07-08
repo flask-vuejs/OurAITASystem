@@ -20,3 +20,9 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 
 app.mount('#app')
+
+
+// npm run dev
+
+
+// 这周前后端更新未同步

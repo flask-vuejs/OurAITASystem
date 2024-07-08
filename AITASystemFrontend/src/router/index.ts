@@ -9,7 +9,6 @@ import Zxxm from '@/views/Zxxm.vue'
 import Papers from '@/views/Papers.vue'
 import News from '@/views/News.vue'
 import Contact from '@/views/Contact.vue'
-import Login from '@/views/Login.vue'
 import PostPaper from '@/views/PostPaper.vue'
 import DatasetDetail from '@/views/details/DatasetDetail.vue'
 
@@ -29,11 +28,6 @@ const router = createRouter({
       path: "/home",
       name: 'home',
       component: Home,
-    },
-    {
-      path:"/login",
-      name: 'login',
-      component:Login,
     },
     {
       path:"/postpaper",

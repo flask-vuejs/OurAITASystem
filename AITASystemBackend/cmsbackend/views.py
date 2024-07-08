@@ -176,6 +176,45 @@ def get_group_list():
         group_list.append(group_dict)
     if group_list:
         return restful.ok(data=group_list)
+# 添加团队成员
+@cmsapi.route('/group/add',methods=['POST','GET'])
+def add_group():
+    form=request.form
+    #print(form)
+    group_type=form['group_type']
+    group_role=form['group_role']
+    group_person_name=form['group_person_name']
+    group_person_description=form['group_person_description']
+    group_person_image_url=form['group_person_image_url']
+    group_person_content=form['group_person_content']
+    group=Group(group_type=group_type,group_role=group_role,group_person_name=group_person_name,group_person_description=group_person_description,group_person_image_url=group_person_image_url,group_person_content=group_person_content)
+    db.session.add(group)
+    db.session.commit()
+    group_dict={
+            "group_id":group.group_id,
+            "group_type":group.group_type,
+            "group_role":group.group_role,
+            "group_person_name":group.group_person_name,
+            "group_person_description":group.group_person_description,
+            "group_person_image_url":group.group_person_image_url,
+            "group_person_content":group.group_person_content,
+            "group_person_papers":group.group_person_papers,
+    }
+    return restful.ok(data=group_dict)
+
+# 删除团队成员
+@cmsapi.route('/group/delete',methods=['POST','GET'])
+def delete_group():
+    group_id=request.form.get('id')
+    #print(group_id)
+    try:
+        group=Group.query.get(group_id)
+    except Exception as e:
+        return restful.params_error(message='团队成员不存在！')    
+    db.session.delete(group)
+    db.session.commit()
+    return restful.ok()
+
 
 # 新闻列表
 @cmsapi.route('/news/list')
@@ -197,6 +236,59 @@ def get_news_list():
         news_list.append(news_dict)
     if news_list:
         return restful.ok(data=news_list)
+# 添加新闻
+@cmsapi.route('/news/add',methods=['POST','GET'])
+def add_news():
+    form=request.form
+    # print(form)
+    #news_id=form['news_id']
+    news_content=form['news_content']
+    news_title=form['news_title']
+    # 使用 datetime.now() 获取当前时间
+    news_date = datetime.now()
+    # 如果需要将日期时间格式化为字符串，可以使用 strftime 方法
+    # news_date_str = news_date.strftime('%Y-%m-%d %H:%M:%S')
+    news_read_count=0
+    news_author=form['news_author']
+    news_link=form['news_link']
+    news_image_url=form['news_image_url']
+    label_id=form['label_id']
+    if not news_title:
+       return restful.params_error(message="新闻标题不能为空！")
+    # 存入数据库
+    news=News(news_title=news_title,news_content=news_content,news_author=news_author,news_date=news_date,news_link=news_link,news_image_url=news_image_url,news_read_count=news_read_count,label_id=label_id)
+    db.session.add(news)
+    db.session.commit()
+    news_dict={
+        "news_id":news.news_id,
+        "news_content":news.news_content,
+        "news_title":news.news_title,
+        "news_date":news.news_date.strftime('%Y-%m-%d %H:%M:%S'),
+        "news_author":news.news_author,
+        "news_link":news.news_link,
+        "news_image_url":news.news_image_url,
+        "news_read_count":news.news_read_count,
+        "label_id":news.label_id,
+    }
+    return restful.ok(data=news_dict)
+
+
+# 删除新闻
+@cmsapi.route('/news/delete',methods=['POST','GET'])
+def delete_news():
+    news_id=request.form.get('id')
+    # print(news_id)
+    if not news_id:
+        return restful.params_error(message="没有传入news_id！")
+    try:
+        news=News.query.get(news_id)
+    except Exception as e:
+        return restful.params_error(message='新闻不存在！')    
+    db.session.delete(news)
+    db.session.commit()
+    return restful.ok()
+
+
 
 # 数据集列表
 @cmsapi.route('/datasets/list')

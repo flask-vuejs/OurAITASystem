@@ -33,3 +33,6 @@ def create_app():
     app.register_blueprint(group)
     app.register_blueprint(datasets)
     return app
+
+
+# set FLASK_APP=app.py && flask run --debug
