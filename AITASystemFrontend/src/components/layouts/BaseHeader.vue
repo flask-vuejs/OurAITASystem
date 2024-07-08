@@ -38,7 +38,7 @@
       </el-sub-menu>
       <el-menu-item index="/news">新闻动态</el-menu-item>
       <el-menu-item index="/contact">联系我们</el-menu-item>
-      <el-menu-item index="/login">登录</el-menu-item>
+      <!-- <el-menu-item index="/login">登录</el-menu-item> -->
     </el-menu>
   </div>
   
