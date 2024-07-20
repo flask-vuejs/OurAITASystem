@@ -63,15 +63,8 @@ import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed 
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import {Vue3SeamlessScroll} from "vue3-seamless-scroll";
-// 图片地址规范化
-const server_host='http://127.0.0.1:5000'
-const formatImageUrl=(image_url:string)=>{
-        if(image_url.startsWith('http')){
-          return image_url
-        }else{
-          return server_host+image_url
-        }
-}
+import {formatImageUrl} from '../utils/ImgNorm'
+
 // 获取论文列表
 interface Papers{
     id:number;
@@ -151,7 +144,7 @@ onMounted(()=>{
     },
   ])
 
-  let noticeInfo = ref("人工智能理论与应用创新研究团队     人工智能理论与应用创新研究团队      人工智能理论与应用创新研究团队")
+  let noticeInfo = ref("人工智能理论与应用创新研究团队                 人工智能理论与应用创新研究团队                        人工智能理论与应用创新研究团队")
 
 
 

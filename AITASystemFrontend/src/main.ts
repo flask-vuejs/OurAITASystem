@@ -5,6 +5,13 @@ import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'  //导入 ElementPlus 组件库的所有模块和功能
 import 'element-plus/dist/index.css'   //导入 Elementplus 组件库所需的全局 CSS 样式
 import * as ElementPlusIconsVue from '@element-plus/icons-vue' //导入 Elementplus 组件库中的所有图标
+//import 'bootstrap/dist/css/bootstrap.css';  // 引入 CSS
+import 'bootstrap/dist/css/bootstrap.min.css'
+// main.ts
+import 'bootstrap-icons/font/bootstrap-icons.css';
+// 引入 JavaScript
+// import 'bootstrap';
+// import '@popperjs/core';
 
 import App from './App.vue'
 import router from './router'
@@ -24,5 +31,10 @@ app.mount('#app')
 
 // npm run dev
 
+/*
+npm install bootstrap
+npm install @popperjs/core --save
+npm i bootstrap-icons
+*/
 
-// 这周前后端更新未同步
+

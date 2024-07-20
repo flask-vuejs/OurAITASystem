@@ -55,18 +55,10 @@
 import { ElFormItem } from 'element-plus';
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { formatImageUrl } from '@/utils/ImgNorm'
 import VueAxios from 'vue-axios';
 import axios from 'axios'; 
-interface GroupData {
-  group_id: number;
-  group_type: string;
-  group_role: string;
-  group_person_name: string;
-  group_person_description: string;
-  group_person_image_url: string;
-  group_person_content: string;
-  group_person_papers: string;
-  };
+import type {GroupData} from '../utils/type'
 
 // 分别创建ref来存储教师和学生数据
 let teachers = ref<GroupData[]>([]);
@@ -80,15 +72,7 @@ const toDetail = (group:GroupData) => {
   });
   //router.push({ path: '/groupdetail'})
 };
-// 图片地址规范化
-const server_host='http://127.0.0.1:5000'
-const formatImageUrl=(image_url:string)=>{
-        if(image_url.startsWith('http')){
-          return image_url
-        }else{
-          return server_host+image_url
-        }
-}
+
 
 async function fetchGroupData() {
   try {

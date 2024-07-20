@@ -12,10 +12,12 @@ import Contact from '@/views/Contact.vue'
 import PostPaper from '@/views/PostPaper.vue'
 import DatasetDetail from '@/views/details/DatasetDetail.vue'
 
+
 // 详情页
 import GroupDetail from '@/views/details/GroupDetail.vue'
 import PaperDetail from '@/views/details/PaperDetail.vue'
-
+import HxxmDetail from '@/views/details/HxxmDetail.vue'
+import ZxxmDetail from '@/views/details/ZxxmDetail.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -70,9 +72,19 @@ const router = createRouter({
       component: Hxxm,
     },
     {
+      path: "/hxxm_detail",
+      name: "hxxm_detail",
+      component: HxxmDetail,
+    },
+    {
       path: "/zxxm",
       name: "zongxiang",
       component: Zxxm,
+    },
+    {
+      path: "/zxxm_detail",
+      name: "zxxm_detail",
+      component: ZxxmDetail,
     },
     {
       path: "/papers",

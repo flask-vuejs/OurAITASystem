@@ -76,7 +76,9 @@ def get_papers_list():
             "content":paper.content,
             "image_url":paper.image_url,
             "author":paper.author,
-            "create_time":paper.create_time,
+            "create_time":paper.create_time.strftime("%Y-%m-%d %H:%M:%S"),
+            'abstract':paper.abstract,
+            'keywords':paper.keywords
         }
         papers_list.append(papers_dict)
     if papers_list:
@@ -98,7 +100,9 @@ def get_papers_detail():
             "content":query.content,
             "image_url":query.image_url,
             "author":query.author,
-            "create_time":query.create_time.strftime("%Y-%m-%d %H:%M:%S")
+            "create_time":query.create_time.strftime("%Y-%m-%d %H:%M:%S"),
+            'abstract':query.abstract,
+            'keywords':query.keywords
         }
         if paper:
             return restful.ok(data=paper)
