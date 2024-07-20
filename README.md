@@ -46,7 +46,7 @@
 >npm install @wangeditor/editor-for-vue<br/>
 
 ## 注意事项：
-><mark>后台由于采用flask框架，所以涉及到---将ORM模型映射到数据库中:</mark><br/>
+><mark>后端由于采用flask框架，所以涉及到---将ORM模型映射到数据库中:</mark><br/>
 >1，初始化迁移仓库：flask db init<br/>
 >2，将ORM模型生成迁移脚本：flask db migrate<br/>
 >3，运行迁移脚本：flask db upgrade<br/>
