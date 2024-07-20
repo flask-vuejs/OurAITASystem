@@ -1,18 +1,18 @@
 # OurAITASystem(深度学习在线加载平台--开发进行中)使用指南<br/>
-##前台：<br/>
+## 前台：<br/>
 ><mark>AITASystemFrontend -- 前端网页</mark><br/>
 运行命令:npm run dev<br/>
 ><mark>AITASystemBackend -- 后端服务</mark><br/>
 运行命令：set flask_app=app.py&&flask run --debug<br/>
 
-##后台：<br/>
+## 后台：<br/>
 ><mark>其中 AITASystemBackend/cmsbackend 是后台管理系统的后端</mark><br/>
 ><mark>后台管理系统的前端地址：https://github.com/flask-vuejs/ouraitasystem-cms</mark><br/>
 >运行命令：npm run serve <br/>
 
 ---<br/>
 
-##前台前端vue3需要的安装包<br/>
+## 前台前端vue3需要的安装包<br/>
 ><mark>前端css用到了bootstrap4：</mark><br/>
 >npm install bootstrap<br/>
 >npm i bootstrap-icons<br/>
@@ -34,7 +34,7 @@
 
 ---<br/>
 
-##后台前端vue3需要的安装包：<br/>
+## 后台前端vue3需要的安装包：<br/>
 >npm install --save querystring<br/>
 >npm install vue-router@4 --save<br/>
 >npm install element-plus@2.2.19 --save<br/>
