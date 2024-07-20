@@ -1,4 +1,4 @@
-# OurAITASystem(深度学习在线加载平台--进行中)使用指南<br/>
+# OurAITASystem(深度学习在线加载平台--开发进行中)使用指南<br/>
 ##前台：<br/>
 ><mark>AITASystemFrontend -- 前端网页</mark><br/>
 运行命令:npm run dev<br/>
