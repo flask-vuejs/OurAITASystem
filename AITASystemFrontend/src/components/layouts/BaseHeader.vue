@@ -31,11 +31,7 @@
         <el-menu-item index="/zxxm">纵向项目</el-menu-item>
       </el-sub-menu>
       <!-- <el-menu-item index="/papers">发表论文</el-menu-item> -->
-      <el-sub-menu index="/papers">
-        <template #title>论文展示</template>
-        <el-menu-item index="/papers">相关论文</el-menu-item>
-        <el-menu-item index="/postpaper">发布论文</el-menu-item>
-      </el-sub-menu>
+      <el-menu-item index="/papers">论文展示</el-menu-item>
       <el-menu-item index="/news">新闻动态</el-menu-item>
       <el-menu-item index="/contact">联系我们</el-menu-item>
       <!-- <el-menu-item index="/login">登录</el-menu-item> -->

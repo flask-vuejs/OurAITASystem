@@ -26,12 +26,13 @@ def get_all_datasets():
         data_dict = {
             "data_id": data.data_id,
             "data_title": data.data_title,
-            "data_content": data.data_content,
+            "data_abstract": data.data_abstract,
             "data_date": data.data_date.strftime('%Y-%m-%d %H:%M:%S'),
             "data_author": data.data_author,
             "data_link": data.data_link,
             "data_read_count": data.data_read_count,
             "data_image_url": data.data_image_url,
+            "data_type": data.data_type
         }
         data_list.append(data_dict)
 
@@ -50,6 +51,7 @@ def get_datasets_detail():
         data={
             "data_id": query.data_id,
             "data_title": query.data_title,
+            "data_abstract":query.data_abstract,
             "data_content": query.data_content,
             "data_date": query.data_date.strftime("%Y年%m月%d日"),
             "data_author": query.data_author,

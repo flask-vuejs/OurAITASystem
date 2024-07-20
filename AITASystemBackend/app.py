@@ -9,7 +9,7 @@ from init import create_app
 app = create_app()
 
 # 调用关系： app.py 调用 __init__.py 调用 xxx.py 调用 models.py 调用 exts.py
-
+# set FLASK_APP=app.py && flask run --debug
 
 # Flask 路由起始
 
@@ -63,7 +63,7 @@ def get_all_news():
             "news_id":data.news_id,
             "news_title":data.news_title,
             "news_content":data.news_content,
-            "news_date":data.news_date,
+            "news_date":data.news_date.strftime('%Y-%m-%d %H:%M:%S'),
             "news_author":data.news_author,
             "news_link":data.news_link,
             "news_read_count":data.news_read_count,
@@ -77,8 +77,6 @@ def get_all_news():
         response = {"message": "No news records found in the database."}
         return jsonify(response), 404
 # Flask 路由结束
-
-
 
 
 

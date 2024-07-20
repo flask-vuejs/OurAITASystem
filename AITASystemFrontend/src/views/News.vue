@@ -1,4 +1,5 @@
 <template>
+<div class="body bg-light">
   <div class="news-container">
     <h2 class="news-header">{{ "新闻动态" }}</h2>
     <div v-if="newsList.length > 0" class="news-grid">
@@ -29,31 +30,15 @@
     </div>
     <p v-else class="no-news">暂无新闻数据</p>
   </div>
+</div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted,onBeforeMount } from 'vue';
 import axios from 'axios';
-// 图片地址规范化
-const server_host='http://127.0.0.1:5000'
-const formatImageUrl=(image_url:string)=>{
-        if(image_url.startsWith('http')){
-          return image_url
-        }else{
-          return server_host+image_url
-        }
-}
-interface News {
-  news_id: number;
-  news_title: string;
-  news_content: string;
-  news_date: string;
-  news_author: string;
-  news_link: string;
-  news_read_count: number;
-  news_image_url: string;
-  label_id: number;
-}
+import {formatImageUrl} from '../utils/ImgNorm'
+import type {News} from '../utils/type'
+
 
 const newsList = ref<News[]>([]);
 const activeIndex = ref<number | null>(null); // 用于跟踪当前展开的新闻索引
@@ -105,6 +90,10 @@ onBeforeMount(() => {
 </script>
 
 <style scoped>
+.body{
+  width:100%;
+  height:100%;
+}
 .news-container {
   padding: 20px;
   max-width: 1200px;

@@ -7,7 +7,7 @@
             <h3 class="paper-title">{{ paper.title }}</h3>
             <p class="author-tag">Author: {{ paper.author }}</p>
           </div>
-          <p class="content-excerpt">{{ paper.content }}</p>
+          <p class="content-excerpt">{{ paper.abstract }}</p>
           <div class="paper-meta">
             <p class="create-time">Create Time: {{ paper.create_time }}</p>
           </div>
@@ -22,31 +22,11 @@
 
 <script setup lang="ts">
 import {defineComponent,ref} from 'vue'
-import {useRoute} from 'vue-router'
-// import {testPapers} from '../testData'
 import axios from 'axios';
-import { createEditor } from '@wangeditor/editor';
-import { pa } from 'element-plus/es/locale';
 import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-// 图片地址规范化
-const server_host='http://127.0.0.1:5000'
-const formatImageUrl=(image_url:string)=>{
-        if(image_url.startsWith('http')){
-          return image_url
-        }else{
-          return server_host+image_url
-        }
-}
-
-interface Papers{
-    id:number;
-    title:string;
-    author:string;
-    content:string;
-    create_time:string;
-    image_url?:string;
-}
+import { useRouter,useRoute } from 'vue-router';
+import {formatImageUrl} from '../utils/ImgNorm'
+import type {Papers} from '../utils/type'
 // const route = useRoute()
 let paperList=ref<Papers[]>([])
 

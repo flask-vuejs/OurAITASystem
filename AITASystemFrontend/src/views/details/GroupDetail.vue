@@ -1,150 +1,43 @@
-
-<style src="@/style/index.css"  scoped></style>
-
-<style scoped>
-.container{
-    position: relative;
-    width: 100%;
-    max-width: 1400px;
-    min-height: 800px;
-    background: #fff;
-    margin:50px;
-    box-shadow: 0 35px 55px rgba(0, 0, 0, 0.1);
-    .top{
-        position:relative;
-        width:100%;
-        height:400px;
-        background: linear-gradient(45deg, #231fbf, #69175f);
-        padding:50px;
-        h2{
-            font-size:2em;
-            color:#fff;
-            text-transform: uppercase;
-            line-height:0.7em;
-            letter-spacing: 0.1em;
-        }
-        .group{
-            position:relative;
-            display: grid;
-            gap:40px;
-            width:100%;
-            grid-template-columns: 1fr 3fr;
-            margin-top:40px;
-            .imgBx{
-                position:relative;
-                width: 100%;
-                img{
-                    width:98%;
-                }
-            }
-            p{
-                font-size:1.2em;
-                color:#fff;
-            }
-        }
-    }
-    .bottom{
-        position:relative;
-        display: grid;
-        margin:50px 50px 0;
-        gap:40px;
-        grid-template-columns: 2fr 3fr;
-        /* background-color: #231fbf; */
-        h4{
-                font-size:1.1em;
-                text-transform:uppercase;
-                letter-spacing: 0.25em;
-                color:#fff;
-                background-color: #231fbf;
-                font-weight: 600;
-                padding: 0 15px;
-                margin-top: 40px;
-                display: inline-flex;
-          }
-        .left_side{
-            margin-top: 50px;
-            .des_info{
-                position:relative;
-                display:flex;
-                flex-direction: column;
-                gap:20px;
-                margin:20px 0;
-                li{
-                    list-style: none;
-                    display: flex;
-                    gap:10px;
-                    .icon{
-                        color:#231fbf;
-                    }
-                    .text{
-                        color:#555;
-                    }
-                }
-            }
-        }
-        .right_side{
-            .adjstMargin{
-                margin-top:-10px;
-                margin-left: -30px;
-            }
-            .papers_list{
-                background: #eee8e8;
-                box-shadow: 0 35px 55px rgba(0, 0, 0, 0.1);
-            }
-        }
-    }
-}
-</style>
-
-
 <template>
-<div v-if="groupData">
-    <div class="container">
-        <div class="top">
-            <h2>{{ groupData.group_person_name }}</h2>
-            <div class="group">
-                <div class="leftSide">
-                    <div class="imgBx">
-                        <img :src="formatImageUrl(groupData.group_person_image_url)">
-                    </div>
-                </div>
-                <div class="rightSide">
-                    <p>{{ groupData.group_person_content }}</p>
-                </div>
-            </div>
+<div class="body py-5">
+    <div class="container content">
+      <div class="row">
+        <div class="col-3 border-right left">
+            <img class="img-fluid img-thumbnail image mb-4" v-if="groupData?.group_person_image_url" :src="formatImageUrl(groupData.group_person_image_url)"/>
+            <ul>
+                <li class="px-3 py-3">
+                    <h6 class="fw-bold">姓名：</h6>
+                    <span>{{ groupData?.group_person_name }}</span>
+                </li>
+                <li class="px-3 py-3">
+                    <h6 class="fw-bold">所属团队：</h6>
+                    <span>{{ groupData?.group_type }}</span>
+                </li>
+                <li class="px-3 py-3">
+                    <h6 class="fw-bold">职位：</h6>
+                    <span>{{ groupData?.group_role }}</span>
+                </li>
+            </ul>
         </div>
-        <div class="bottom">
-            <div class="left_side">
-                <h4>Description</h4>
-                <ul class="des_info">
-                    <li>
-                        <el-icon class="icon"><Avatar /></el-icon>
-                        <span class="text">{{ groupData.group_person_name }}</span>
-                    </li>
-                    <li>
-                        <el-icon class="icon"><House /></el-icon>
-                        <span class="text">{{ groupData.group_type }}</span>
-                    </li>
-                    <li>
-                        <el-icon class="icon"><Ticket /></el-icon>
-                        <span class="text">{{ groupData.group_role }}</span>
-                    </li>
-                    <li>
-                        <el-icon class="icon"><EditPen /></el-icon>
-                        <span class="text">{{ groupData.group_person_description }}</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="right_side">
-                <h4 class="adjstMargin">论文展示</h4>
-                <div class="papers_list"></div>
-            </div>
+        <div class="col-7 p-4 right">
+            <ul>
+                <li class="my-3">
+                    <h5>个人简介</h5>
+                    <p>{{ groupData?.group_person_description }}</p>
+                </li>
+                <li class="my-3">
+                    <h5>自我描述</h5>
+                    <p>{{ groupData?.group_person_content }}</p>
+                </li>
+                <li class="my-3">
+                    <h5>发布论文</h5>
+                    <p>{{ groupData?.group_person_papers }}</p>
+                </li>
+            </ul>
         </div>
+        <div class="col-2"></div>
+      </div>
     </div>
-</div>
-<div v-else>
-    <!-- 显示加载中或错误信息 -->
-    Loading...
 </div>
 </template>
 
@@ -152,27 +45,8 @@
 import {ref,onBeforeMount,onMounted,defineComponent} from 'vue';
 import {useRoute} from 'vue-router';
 import axios from 'axios'; 
-
-// import 'element-plus/dist/index.css';
-// 图片地址规范化
-const server_host='http://127.0.0.1:5000'
-const formatImageUrl=(image_url:string)=>{
-        if(image_url.startsWith('http')){
-          return image_url
-        }else{
-          return server_host+image_url
-        }
-}
-interface GroupData {
-  group_id: number;
-  group_type: string;
-  group_role: string;
-  group_person_name: string;
-  group_person_description: string;
-  group_person_image_url: string;
-  group_person_content: string;
-  group_person_papers: string;
-};
+import {formatImageUrl} from '../../utils/ImgNorm'
+import type { GroupData} from '../../utils/type'
 let groupData=ref<GroupData>();
 
 async function getGroupData(){
@@ -207,4 +81,54 @@ onBeforeMount(()=>{
 })
 
 </script>
+
+<style scoped>
+ul{
+    list-style: none;
+    padding-left: 0px;
+}
+.body{
+    width:100%;
+    height:100%;
+    background: #f7f9fa;
+    .content{
+        background-color: #fff;
+        .left{
+            display: flex;
+            flex-direction: column;
+            align-items:center;
+            padding-top:20px;
+            .image{
+                max-width: 250px;
+            }
+            li{
+                display:flex;
+                align-items:center;
+                border-bottom: 1px solid #e8eaec;
+                h6{
+                    width:150px;
+                }
+                span{
+                    color:#868b98;
+                }
+            }
+        }
+        .right{
+            li{
+                border-top: 1px solid #e8eaec;
+                h5{
+                    font-weight: bold;
+                    padding:5px;
+                    width:200px;
+                    background: #e8eaec;
+                    color: #333;
+                }
+                p{
+                    margin-top:10px;
+                }
+            }
+        }
+    }
+}
+</style>
 

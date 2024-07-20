@@ -1,17 +1,20 @@
 <template>
   <div class="project-list">
-    <div class="project-item" v-for="(item, index) in projects" :key="index">
-      <div class="project-content">
-        <i :class="item.icon"></i>
-        <div>
-          <h3 class="project-title">{{ item.name }}</h3>
-          <p class="project-description">{{ item.description }}</p>
+    <div class="project-item" v-for="(item, index) in hxxms" :key="index">
+      <div @click.prevent="to_detail(item.id)">
+        <div class="project-content">
+          <i ></i>
+          <!-- :class="item.icon" -->
+          <div>
+            <h3 class="project-title">{{ item.name }}</h3>
+            <p class="project-description">{{ item.description }}</p>
+          </div>
         </div>
-      </div>
-      <div class="project-stats">
-        <span><i class="fas fa-users"></i> {{ item.teamSize }} Team Members</span>
-        <span><i class="fas fa-calendar-alt"></i> Started: {{ item.startDate }}</span>
-        <span><i class="fas fa-thermometer-half"></i> Status: {{ item.status }}</span>
+        <div class="project-stats">
+          <span><i class="fas fa-users"></i>负责人： {{ item.project_manager }}</span>
+          <span><i class="fas fa-calendar-alt"></i> Started: {{ item.start_date }}</span>
+          <span><i class="fas fa-thermometer-half"></i> Ended: {{ item.end_date }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -20,39 +23,39 @@
 <script setup lang="ts" name="">
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-const projects = reactive([
-  { name: 'Ultimate Design Project', description: 'A commitment to innovative design.', teamSize: 15, startDate: '2021-06-15', status: 'Active', icon: 'fas fa-palette' },
-  { name: 'Next-Gen AI Initiative', description: 'Advancing AI technology for future needs.', teamSize: 22, startDate: '2022-01-07', status: 'In Progress', icon: 'fas fa-robot' },
-  { name: 'Eco-Friendly Agriculture', description: 'Sustainable farming practices.', teamSize: 8, startDate: '2022-05-20', status: 'Completed', icon: 'fas fa-seedling' },
-  { name: 'Blockchain Logistics', description: 'Enhancing logistics with blockchain.', teamSize: 10, startDate: '2023-03-12', status: 'Planned', icon: 'fas fa-link' },
-]);
-/**
-* 路由对象
-*/
-const route = useRoute();
-/**
-* 路由实例
-*/
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
-* 数据部分
-*/
-const data = reactive({})
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-})
-onMounted(() => {
-  console.log('Enhanced component with detailed project stats and animations mounted.');
-});
-watchEffect(()=>{
-})
-// 使用toRefs解构
-// let { } = { ...toRefs(data) } 
-defineExpose({
-  ...toRefs(data)
-})
+import type {Hxxm} from '../utils/type'
+import {formatImageUrl} from '../utils/ImgNorm'
+import axios from 'axios'
 
+// 跳转到详情页
+const router=useRouter()
+const to_detail=(id:number)=>{
+  router.push({ 
+    path: "/hxxm_detail",
+    query:{
+      id:id
+    }
+  });
+}
+
+
+const hxxms = ref<Hxxm[]>([]); 
+
+async function getHxxms() {
+  try{
+    const res:any=await axios.get<any>('http://127.0.0.1:5000/hxxm/list')
+    if(res['data']['code']==200){
+      hxxms.value=res['data']['data']
+      //console.log(hxxms.value)
+    }
+  }catch(e){
+    console.log(e)
+  }
+}
+
+onMounted(()=>{
+  getHxxms()
+})
 </script>
 
 
@@ -105,7 +108,7 @@ defineExpose({
 
 .project-stats {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   font-size: 0.9rem;
   color: #444;
 }
