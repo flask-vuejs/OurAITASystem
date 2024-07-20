@@ -44,3 +44,9 @@
 ><mark>我还尝试安装了wangeditor（如下）,但是效果不好（所以项目中放弃使用），前端html渲染时会无效（不知道为什么）：</mark><br/>
 >npm install wangeditor --save<br/>
 >npm install @wangeditor/editor-for-vue<br/>
+
+## 注意事项：
+><mark>后台由于采用flask框架，所以涉及到---将ORM模型映射到数据库中:</mark><br/>
+>1，初始化迁移仓库：flask db init<br/>
+>2，将ORM模型生成迁移脚本：flask db migrate<br/>
+>3，运行迁移脚本：flask db upgrade<br/>
